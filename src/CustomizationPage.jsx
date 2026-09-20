@@ -97,7 +97,7 @@ function CustomizationPage() {
         {/* Шапка */}
         <div className="flex items-center justify-between mb-8">
           <Link
-            to="/"
+            to="/app"
             className="text-gray-400 hover:text-white transition flex items-center gap-2"
           >
             <ArrowLeft size={24} /> Назад

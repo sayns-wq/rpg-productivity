@@ -47,7 +47,7 @@ export function TopBar({ title, showBack = true }) {
       <div className="flex items-center gap-3">
         {!isHome && showBack && (
           <Link
-            to="/"
+            to="/app"
             className="text-gray-400 hover:text-white transition p-2 hover:bg-gray-800 rounded-lg"
             title="На главную"
           >

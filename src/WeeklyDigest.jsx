@@ -134,7 +134,7 @@ function WeeklyDigest() {
         {/* Шапка */}
         <div className="flex items-center gap-4 mb-6">
           <Link
-            to="/"
+            to="/app"
             className="text-gray-400 hover:text-white transition flex items-center gap-2"
           >
             <ArrowLeft size={24} />

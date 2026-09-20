@@ -218,7 +218,7 @@ function HabitsPage() {
       <div className="max-w-4xl mx-auto p-6">
         <div className="flex items-center gap-4 mb-6">
           <Link
-            to="/"
+            to="/app"
             className="text-gray-400 hover:text-white transition flex items-center gap-2"
           >
             <ArrowLeft size={24} />
