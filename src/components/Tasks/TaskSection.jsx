@@ -77,19 +77,19 @@ export function TaskSection({
 
   return (
     <div className="glass rounded-2xl p-6 mb-6 animate-fade-in">
-      <div className="flex justify-between items-center mb-4">
-        <div
-          className="flex items-center gap-2 cursor-pointer flex-1"
+      <div className="flex items-center justify-between mb-3 sm:mb-4">
+        <button
           onClick={onToggle}
+          className="flex items-center gap-2 flex-1 text-left"
         >
           <span className="text-2xl">{icon}</span>
           <h2 className="text-2xl font-bold flex-1">{title}</h2>
           <span className="text-gray-400 text-sm">{tasks.length}</span>
           {expanded ? <ChevronUp /> : <ChevronDown />}
-        </div>
+        </button>
         <button
           onClick={onCreate}
-          className={`${buttonColor} text-white px-4 py-2 rounded-lg transition flex items-center gap-2 transform hover:scale-105 ml-4`}
+          className={`${buttonColor} text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg font-semibold text-sm sm:text-base transition flex items-center gap-1 min-h-[44px]`}
         >
           <Plus size={20} />
           Создать

@@ -17,3 +17,36 @@
 .animate-xp-gain {
   animation: xp-gain 1.5s ease-out forwards;
 }
+
+/* Safe area для iPhone с notch */
+@supports (padding-top: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* Улучшения для мобильных */
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+
+  button,
+  a,
+  input,
+  select {
+    min-height: 44px;
+  }
+}
+
+/* Предотвращаем zoom на input при фокусе на iOS */
+@media (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}

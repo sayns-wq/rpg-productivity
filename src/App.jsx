@@ -284,8 +284,8 @@ function App() {
 
       <XPAnimation animations={xpAnimations} />
 
-      <div className="max-w-6xl mx-auto p-6">
-        <div className="glass rounded-2xl p-6 mb-6 animate-fade-in">
+      <div className="max-w-6xl mx-auto px-4 py-4 sm:p-6">
+        <div className="glass rounded-2xl p-4 sm:p-6 mb-4 sm:mb-6 animate-fade-in">
           <ProfileHeader
             profile={profile.profile}
             level={level}

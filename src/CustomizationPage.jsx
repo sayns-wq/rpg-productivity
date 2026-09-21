@@ -70,7 +70,7 @@ function CustomizationPage() {
       localStorage.setItem("avatar_class", settings.avatar_class);
 
       // Перезагружаем страницу, чтобы применить тему везде
-      window.location.href = "/";
+      window.location.href = "/app";
     }
     setSaving(false);
   };
