@@ -8,7 +8,6 @@ import {
   Flame,
   History,
   Palette,
-  Bell,
   Menu,
   X,
   LogOut,
@@ -16,13 +15,7 @@ import {
   Map,
 } from "lucide-react";
 
-function Navigation({
-  profile,
-  level,
-  onSignOut,
-  notificationsEnabled,
-  onEnableNotifications,
-}) {
+function Navigation({ profile, level, onSignOut }) {
   // Если level не передаётся как пропс, вычисляем его из профиля
   const currentLevel = level || getLevelInfo(profile?.total_xp || 0).level;
   const [isOpen, setIsOpen] = useState(false);
@@ -110,24 +103,6 @@ function Navigation({
                   <span className="font-medium">{item.label}</span>
                 </Link>
               ))}
-
-              {/* Уведомления */}
-              <button
-                onClick={() => {
-                  onEnableNotifications();
-                  setIsOpen(false);
-                }}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition ${
-                  notificationsEnabled
-                    ? "bg-green-600/30 text-green-400 border border-green-500/50"
-                    : "text-gray-400 hover:bg-gray-800 hover:text-white"
-                }`}
-              >
-                <Bell size={20} />
-                <span className="font-medium">
-                  Уведомления {notificationsEnabled ? "✓" : ""}
-                </span>
-              </button>
 
               {/* Выход */}
               <button

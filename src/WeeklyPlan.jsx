@@ -29,6 +29,7 @@ import {
   Clock,
   GripVertical,
   Target,
+  Trash2,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import toast from "react-hot-toast";
@@ -57,38 +58,45 @@ function DraggableTask({ task, onComplete, onDelete }) {
       style={style}
       {...listeners}
       {...attributes}
-      className={`bg-gray-800/50 p-3 rounded-lg mb-2 cursor-move hover:bg-gray-800/70 transition group ${
+      // Добавлен touch-none чтобы браузер не скроллил страницу при перетаскивании
+      className={`bg-gray-800/50 p-2 sm:p-3 rounded-lg mb-2 cursor-move touch-none hover:bg-gray-800/70 transition group ${
         task.status === "done" ? "opacity-50" : ""
       }`}
     >
       <div className="flex items-start gap-2">
-        <div className="text-gray-500 hover:text-gray-300 mt-1">
-          <GripVertical size={16} />
+        <div className="text-gray-500 hover:text-gray-300 mt-1 flex-shrink-0">
+          <GripVertical size={16} className="sm:hidden" />{" "}
+          {/* Иконка только для мобилок как подсказка */}
+          <GripVertical size={18} className="hidden sm:block" />
         </div>
 
         <div className="flex-1 min-w-0">
           <p
-            className={`font-semibold truncate ${task.status === "done" ? "line-through text-gray-500" : ""}`}
+            className={`font-semibold truncate text-sm sm:text-base ${
+              task.status === "done" ? "line-through text-gray-500" : ""
+            }`}
           >
             {task.title}
           </p>
 
-          <div className="flex items-center gap-2 mt-1 flex-wrap">
+          <div className="flex items-center gap-1.5 sm:gap-2 mt-1 flex-wrap">
             <span
-              className={`text-xs px-2 py-1 rounded bg-${cat.color}-600/20 text-${cat.color}-400`}
+              className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded bg-${cat.color}-600/20 text-${cat.color}-400 border border-${cat.color}-500/30`}
             >
-              {cat.icon} {cat.name}
+              {cat.icon} <span className="hidden sm:inline">{cat.name}</span>
             </span>
             <span
-              className={`text-xs px-2 py-1 rounded bg-${priority.color}-600/20 text-${priority.color}-400`}
+              className={`text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded bg-${priority.color}-600/20 text-${priority.color}-400`}
             >
               {priority.icon}
             </span>
-            <span className="text-xs text-yellow-400">{task.xp} XP</span>
+            <span className="text-[10px] sm:text-xs text-yellow-400 font-medium">
+              {task.xp} XP
+            </span>
           </div>
 
           {task.deadline && (
-            <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+            <p className="text-[10px] sm:text-xs text-gray-400 mt-1 flex items-center gap-1">
               <Clock size={10} />
               {format(new Date(task.deadline), "dd MMM, HH:mm", { locale: ru })}
             </p>
@@ -96,13 +104,15 @@ function DraggableTask({ task, onComplete, onDelete }) {
         </div>
 
         {task.status !== "done" && (
-          <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition">
+          // ИЗМЕНЕНИЕ: opacity-100 на мобильных, opacity-0 только на десктопе (sm:)
+          <div className="flex gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition flex-shrink-0">
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 onComplete(task);
               }}
-              className="text-green-400 hover:text-green-300"
+              className="text-green-400 hover:text-green-300 p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-lg hover:bg-green-400/10 transition"
+              aria-label="Выполнить"
             >
               <Check size={18} />
             </button>
@@ -111,9 +121,10 @@ function DraggableTask({ task, onComplete, onDelete }) {
                 e.stopPropagation();
                 onDelete(task.id);
               }}
-              className="text-red-400 hover:text-red-300"
+              className="text-red-400 hover:text-red-300 p-1.5 sm:p-2 min-w-[36px] min-h-[36px] sm:min-w-[44px] sm:min-h-[44px] flex items-center justify-center rounded-lg hover:bg-red-400/10 transition"
+              aria-label="Удалить"
             >
-              <GripVertical size={18} className="rotate-45" />
+              <Trash2 size={18} />
             </button>
           </div>
         )}
@@ -143,24 +154,32 @@ function DayColumn({ day, tasks, onComplete, onDelete }) {
   return (
     <div
       ref={setNodeRef}
-      className={`glass rounded-xl p-4 min-h-[300px] transition ${
-        isOver ? "border-2 border-purple-500 bg-purple-900/20" : ""
+      className={`glass rounded-xl p-3 sm:p-4 min-h-[200px] sm:min-h-[300px] transition ${
+        isOver
+          ? "border-2 border-purple-500 bg-purple-900/20"
+          : "border border-gray-700/50"
       }`}
     >
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3 sm:mb-4">
         <div>
           <h3
-            className={`font-bold text-lg ${isToday(day) ? "text-purple-400" : ""}`}
+            className={`font-bold text-base sm:text-lg ${
+              isToday(day) ? "text-purple-400" : ""
+            }`}
           >
             {format(day, "EEEE", { locale: ru })}
           </h3>
-          <p className="text-sm text-gray-400 capitalize">
+          <p className="text-xs sm:text-sm text-gray-400 capitalize">
             {format(day, "dd MMMM", { locale: ru })}
           </p>
         </div>
         <div className="text-right">
-          <p className="text-2xl font-bold text-yellow-400">{totalXp}</p>
-          <p className="text-xs text-gray-400">{dayTasks.length} задач</p>
+          <p className="text-xl sm:text-2xl font-bold text-yellow-400">
+            {totalXp}
+          </p>
+          <p className="text-[10px] sm:text-xs text-gray-400">
+            {dayTasks.length} задач
+          </p>
         </div>
       </div>
 
@@ -174,8 +193,8 @@ function DayColumn({ day, tasks, onComplete, onDelete }) {
       ))}
 
       {dayTasks.length === 0 && (
-        <p className="text-gray-600 text-center py-8 text-sm">
-          Нет задач на этот день
+        <p className="text-gray-600 text-center py-6 sm:py-8 text-xs sm:text-sm">
+          Нет задач
         </p>
       )}
     </div>
@@ -194,15 +213,15 @@ function NoDeadlineSection({ tasks, onComplete, onDelete }) {
   return (
     <div
       ref={setNodeRef}
-      className={`mt-8 glass rounded-xl p-6 transition ${
+      className={`mt-6 sm:mt-8 glass rounded-xl p-4 sm:p-6 transition border border-gray-700/50 ${
         isOver ? "border-2 border-purple-500 bg-purple-900/20" : ""
       }`}
     >
-      <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-        <Target className="text-gray-400" />
+      <h2 className="text-lg sm:text-xl font-bold mb-4 flex items-center gap-2">
+        <Target className="text-gray-400" size={20} />
         Задачи без даты ({tasks.length})
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {tasks.map((task) => (
           <DraggableTask
             key={task.id}
@@ -213,12 +232,12 @@ function NoDeadlineSection({ tasks, onComplete, onDelete }) {
         ))}
       </div>
       {tasks.length === 0 && (
-        <p className="text-gray-500 text-center py-4">
+        <p className="text-gray-500 text-center py-4 text-sm">
           Все задачи распределены по дням!
         </p>
       )}
       {isOver && (
-        <p className="text-purple-400 text-center mt-4 text-sm">
+        <p className="text-purple-400 text-center mt-4 text-sm font-medium animate-pulse">
           Отпусти задачу здесь, чтобы убрать дедлайн
         </p>
       )}
@@ -240,7 +259,7 @@ function WeeklyPlan() {
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 10 } }),
     useSensor(TouchSensor, {
-      activationConstraint: { delay: 250, tolerance: 5 },
+      activationConstraint: { delay: 250, tolerance: 5 }, // Отлично для мобилок
     }),
   );
 
@@ -289,12 +308,9 @@ function WeeklyPlan() {
     const taskId = active.id;
     const overData = over.data.current;
 
-    // Если бросили на день
     if (overData?.type === "day") {
       await updateTaskDeadline(taskId, overData.date);
-    }
-    // Если бросили в секцию "без даты"
-    else if (overData?.type === "no-deadline") {
+    } else if (overData?.type === "no-deadline") {
       await clearTaskDeadline(taskId);
     }
   };
@@ -317,7 +333,6 @@ function WeeklyPlan() {
           t.id === taskId ? { ...t, deadline: deadlineDate.toISOString() } : t,
         ),
       );
-
       toast.success("Задача перенесена!");
     } catch (err) {
       console.error("Ошибка:", err);
@@ -335,7 +350,6 @@ function WeeklyPlan() {
       setTasks((prev) =>
         prev.map((t) => (t.id === taskId ? { ...t, deadline: null } : t)),
       );
-
       toast.success("Дедлайн удалён!");
     } catch (err) {
       console.error("Ошибка:", err);
@@ -345,7 +359,6 @@ function WeeklyPlan() {
 
   const handleComplete = async (task) => {
     try {
-      // 1. Получаем сессию
       const {
         data: { session },
       } = await supabase.auth.getSession();
@@ -354,7 +367,6 @@ function WeeklyPlan() {
         return;
       }
 
-      // 2. Получаем профиль для множителя усталости
       const { data: profileData } = await supabase
         .from("profiles")
         .select("fatigue, total_xp, level")
@@ -366,12 +378,10 @@ function WeeklyPlan() {
         return;
       }
 
-      // 3. Рассчитываем XP с учётом усталости
       const multiplier =
         profileData.fatigue >= 80 ? 0.25 : profileData.fatigue >= 50 ? 0.5 : 1;
       const earnedXp = Math.round(task.xp * multiplier);
 
-      // 4. Обновляем статус задачи
       await supabase
         .from("tasks")
         .update({
@@ -380,8 +390,6 @@ function WeeklyPlan() {
         })
         .eq("id", task.id);
 
-      // 5. Создаём запись в action_logs
-      // Преобразуем tier в type для совместимости с историей
       const logType =
         task.tier === "chore"
           ? "task"
@@ -392,16 +400,15 @@ function WeeklyPlan() {
       await supabase.from("action_logs").insert([
         {
           user_id: session.user.id,
-          type: logType, // 'task', 'habit', или 'milestone'
+          type: logType,
           title: task.title,
           xp_earned: earnedXp,
-          tier: task.tier || "task", // сохраняем оригинальный tier
+          tier: task.tier || "task",
           category: task.category || "work",
           created_at: new Date().toISOString(),
         },
       ]);
 
-      // 6. Обновляем профиль (total_xp и level)
       const newTotalXp = (profileData.total_xp || 0) + earnedXp;
       const newLevel = Math.floor(newTotalXp / 100) + 1;
       const oldLevel = profileData.level || 1;
@@ -414,12 +421,9 @@ function WeeklyPlan() {
         })
         .eq("id", session.user.id);
 
-      // 7. Начисляем XP характеристикам (если есть)
       if (task.stats && task.stats.length > 0) {
         const statXp = Math.ceil(earnedXp / task.stats.length);
-
         for (const statType of task.stats) {
-          // Сначала получаем текущее значение
           const { data: currentStat } = await supabase
             .from("user_stats")
             .select("xp")
@@ -428,7 +432,6 @@ function WeeklyPlan() {
             .single();
 
           if (currentStat) {
-            // Потом обновляем
             await supabase
               .from("user_stats")
               .update({
@@ -441,15 +444,12 @@ function WeeklyPlan() {
         }
       }
 
-      // 8. Обновляем UI
       setTasks((prev) =>
         prev.map((t) => (t.id === task.id ? { ...t, status: "done" } : t)),
       );
 
-      // 9. Показываем уведомление
       toast.success(`Задача выполнена! +${earnedXp} XP`);
 
-      // 10. Если уровень повысился
       if (newLevel > oldLevel) {
         setTimeout(() => {
           toast.success(`🎉 Уровень повышен! Теперь уровень ${newLevel}`);
@@ -483,7 +483,7 @@ function WeeklyPlan() {
       <div
         className={`min-h-screen ${theme.bg} flex items-center justify-center`}
       >
-        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-purple-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-t-4 border-b-4 border-purple-500"></div>
       </div>
     );
   }
@@ -492,17 +492,21 @@ function WeeklyPlan() {
     <div
       className={`min-h-screen ${theme.bg} text-white transition-colors duration-500`}
     >
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="flex items-center gap-4 mb-6">
-          <Link to="/app" className="text-gray-400 hover:text-white transition">
+      {/* ИЗМЕНЕНИЕ: px-3 py-4 для мобилок, sm:px-6 sm:py-6 для десктопа */}
+      <div className="max-w-7xl mx-auto px-3 py-4 sm:px-6 sm:py-6">
+        <div className="flex items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+          <Link
+            to="/app"
+            className="text-gray-400 hover:text-white transition p-2 -ml-2 sm:ml-0"
+          >
             <ArrowLeft size={24} />
           </Link>
-          <div>
-            <h1 className="text-3xl font-bold flex items-center gap-2">
-              <Calendar className="text-purple-400" />
-              План на неделю
+          <div className="min-w-0">
+            <h1 className="text-xl sm:text-3xl font-bold flex items-center gap-2">
+              <Calendar className="text-purple-400 flex-shrink-0" size={24} />
+              <span className="truncate">План на неделю</span>
             </h1>
-            <p className="text-gray-400 capitalize">
+            <p className="text-xs sm:text-sm text-gray-400 capitalize truncate">
               {format(weekStart, "dd MMMM", { locale: ru })} -{" "}
               {format(weekEnd, "dd MMMM yyyy", { locale: ru })}
             </p>
@@ -515,7 +519,8 @@ function WeeklyPlan() {
           onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {/* ИЗМЕНЕНИЕ: grid-cols-1 на мобилках (вертикальный список), дальше адаптивно */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
             {weekDays.map((day) => (
               <DayColumn
                 key={`day-${day.toISOString()}`}
@@ -529,14 +534,15 @@ function WeeklyPlan() {
 
           <DragOverlay>
             {activeTask && (
-              <div className="bg-gray-800/90 p-3 rounded-lg shadow-xl border-2 border-purple-500">
-                <p className="font-semibold">{activeTask.title}</p>
-                <p className="text-sm text-yellow-400">{activeTask.xp} XP</p>
+              <div className="bg-gray-800/95 p-3 rounded-lg shadow-2xl border-2 border-purple-500 w-[280px]">
+                <p className="font-semibold text-sm">{activeTask.title}</p>
+                <p className="text-xs text-yellow-400 mt-1">
+                  {activeTask.xp} XP
+                </p>
               </div>
             )}
           </DragOverlay>
 
-          {/* Переместили NoDeadlineSection ВНУТРЬ DndContext */}
           <NoDeadlineSection
             tasks={noDeadlineTasks}
             onComplete={handleComplete}
